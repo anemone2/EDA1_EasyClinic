@@ -1,7 +1,9 @@
-funciones_interfaz.py
-.
-interfaz_grafica.py
-.
-imagenes
-  imagen1.png
-  imagen2.png...
+mi_proyecto/
+│
+├── funciones_interfaz.py        # Funciones
+├── interfaz_grafica.py          # Código principal
+│
+└── imagenes/                    # Carpeta de imagenes
+    ├── imagen1.png
+    ├── imagen2.png
+    └── ...         
