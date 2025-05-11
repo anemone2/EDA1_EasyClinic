@@ -1,31 +1,80 @@
-#Interfaz grafica
-from inicioDeSesion import inicioDeSesion
 import tkinter as tk
+import funciones_interfaz
+from tkinter import ttk
 import tkinter.messagebox as messagebox
 
-# Menú principal
+# ventana principal---------------------------------------------------------------------
+ventana = tk.Tk()
+ventana.title("Sistema de Inicio de Sesión")
+ventana.geometry("1200x720") 
+# Iniciar partículas
+canvas_fondo = funciones_interfaz.iniciar_particulas(ventana)
+# Enviar el canvas al fondo
+ventana.lower(canvas_fondo)
+
+
+#estilos---------------------------------------------------------------------------------
+style = ttk.Style()
+style.theme_use("clam")  # 'clam', 'alt', 'default', 'classic'
+
+style.configure("boton_salir.TButton", 
+                font=("Arial", 12), 
+                padding=6,
+                foreground="black", 
+                background="red")
+style.map("boton_salir.TButton",
+          background=[("active", "dark red")])
+
+style.configure("estilo_principal.TButton",
+                font=("Arial", 16),
+                foreground="black", 
+                background="#E0F7FA",
+                borderwidth=1,
+                focusthickness=3,
+                focuscolor="none",
+                padding=(13,9))
+style.map("Genial.TButton",
+          background=[("active", "#B2EBF2")],          
+          relief=[("pressed", "sunken"), ("!pressed", "raised")])
+
+style.configure("botones_chicos.TButton",
+                font=("Arial", 16),
+                foreground="black", 
+                background="#E0F7FA",
+                borderwidth=1,
+                focusthickness=3,
+                focuscolor="none",
+                padding=(9,6))
+style.map("Genial.TButton",
+          background=[("active", "#B2EBF2")],      
+          relief=[("pressed", "sunken"), ("!pressed", "raised")])
+#----------------------------------------------------------------------------------------
+
+# Menú principal-------------------------------------------------------------------------
 def menuPrincipal():
     # Limpiar la ventana
-    for widget in ventana.winfo_children():
-        widget.destroy()
+    funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
     
     # Título
     titulo = tk.Label(ventana, text="Bienvenido al Sistema", font=("Arial", 24, "bold"))
     titulo.pack(pady=70)
     
     # Botón de inicio de sesión como paciente
-    boton_paciente = tk.Button(ventana, text="Iniciar sesión como Paciente", font=("Arial", 16), width=30, command=lambda: mostrar_formulario("Paciente"))
+    boton_paciente = ttk.Button(ventana, text="Iniciar sesión como Paciente", style="estilo_principal.TButton", command=lambda: mostrar_formulario("Paciente"), width=30)
     boton_paciente.pack(pady=20)
     
     # Botón de inicio de sesión como administrador
-    boton_admin = tk.Button(ventana, text="Iniciar sesión como Administrador", font=("Arial", 16), width=30, command=lambda: mostrar_formulario("Administrador"))
+    boton_admin = ttk.Button(ventana, text="Iniciar sesión como Administrador", style="estilo_principal.TButton", command=lambda: mostrar_formulario("Administrador"), width=30)
     boton_admin.pack(pady=20)
 
+    boton_salir = ttk.Button(ventana, text="Salir", style="boton_salir.TButton", command=ventana.destroy)
+    boton_salir.place(x=1050, y=650)
+
+#Inicio de sesión----------------------------------------------------------------------------------------------------------
 def mostrar_formulario(tipoUsuario):
     # Limpiar la ventana
-    for widget in ventana.winfo_children():
-        widget.destroy()
-    
+    funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
+
     # Título del formulario
     titulo_formulario = tk.Label(ventana, text=f"Iniciar sesión como {tipoUsuario}", font=("Arial", 24, "bold"))
     titulo_formulario.pack(pady=50)
@@ -54,41 +103,115 @@ def mostrar_formulario(tipoUsuario):
         nombre = ingresar_nombre.get()
         correo = ingresar_correo.get()
         contrasena = ingresar_contrasena.get() if ingresar_contrasena else None
-        exito, mensaje = inicioDeSesion(tipoUsuario, nombre, correo, contrasena)
+        exito, mensaje = funciones_interfaz.inicioDeSesion(tipoUsuario, nombre, correo, contrasena)
         
         print(f"Validación: {exito}, Mensaje: {mensaje}") #guiarse en la terminal
 
         if exito:
             if tipoUsuario == "Paciente":
                 print("Abriendo interfaz de paciente...")  
-                interfazPaciente()
+                interfazPaciente(nombre)
             elif tipoUsuario == "Administrador":
                 print("Abriendo interfaz de administrador...")  
-                interfazAdmin()
+                interfazAdmin(nombre)
         else:
             # Mostrar error
             lbl_resultado = tk.Label(ventana, text=mensaje, font=("Arial", 14), fg="red")
             lbl_resultado.pack(pady=10)
     
-    boton_enviar = tk.Button(ventana, text="Enviar", font=("Arial", 16), width=20, command=enviar_datos)
+    boton_enviar = ttk.Button(ventana, text="Enviar", style="botones_chicos.TButton", width=10, command=enviar_datos)
     boton_enviar.pack(pady=20)
 
     # Botón para colver al menú principal
-    boton_regresar = tk.Button(ventana, text="Regresar", font=("Arial", 16), width=20, command=menuPrincipal)
+    boton_regresar = ttk.Button(ventana, text="Regresar", style="botones_chicos.TButton", width=10, command=menuPrincipal)
     boton_regresar.pack(pady=10)
 
-def interfazAdmin():
-    for widget in ventana.winfo_children():
-        widget.destroy()
+#Interfaz del admin-----------------------------------------------------------------------------------------------------------
+def interfazAdmin(nombre):
+    #Limpiar la ventana
+    funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
     
-    titulo_formulario = tk.Label(ventana, text="Por favor, ingrese sus datos para continuar", font=("Arial", 24, "bold"))
-    titulo_formulario.pack(pady=50)
+    # Título centrado que ocupa dos columnas
+    titulo = tk.Label(ventana, text=f"Bienvenido, {nombre}", font=("Arial", 24, "bold"))
+    titulo.pack(pady=50)
+    
+    boton_citas_registradas = ttk.Button(ventana, text="Citas registradas", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_citas_registradas.pack(pady=20)
+    
+    boton_horarios = ttk.Button(ventana, text="Horarios", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_horarios.pack(pady=20)
 
-def interfazPaciente():
-    for widget in ventana.winfo_children():
-        widget.destroy()
+    boton_registro_medico = ttk.Button(ventana, text="Registro médico", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_registro_medico.pack(pady=20)
+
+    boton_estadisticas = ttk.Button(ventana, text="Estadísticas", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_estadisticas.pack(pady=20)
+
+    boton_historial_citas = ttk.Button(ventana, text="Historial de citas", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_historial_citas.pack(pady=20)
     
-    titulo_formulario = tk.Label(ventana, text="Por favor, ingrese sus datos para continuar", font=("Arial", 24, "bold"))
+    # Botón para volver al menú principal
+    boton_regresar = ttk.Button(ventana, text="Regresar", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_regresar.pack(pady=50)
+
+###def interfazAdmin_avanzada():
+    #funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
+    #boton_salir = ttk.Button(ventana, text="Salir", style="boton_salir.TButton", command=ventana.destroy)
+    #boton_salir.place(x=1050, y=650)
+
+def interfaz_admin_avanzada():
+    #Limpiar la ventana
+    funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
+    
+    # Configurar el layout en dos columnas:
+    ventana.columnconfigure(0, weight=1)
+    ventana.columnconfigure(1, weight=3)
+    ventana.rowconfigure(0, weight=1)
+    
+    # Crear el frame izquierdo para los botones (1/4 del ancho)
+    frame_izquierdo = tk.Frame(ventana, bg="#E0E0E0")
+    frame_izquierdo.grid(row=0, column=0, sticky="nsew")
+    
+    # Crear el frame derecho para el contenido (3/4 del ancho)
+    frame_derecho = tk.Frame(ventana, bg="#FFFFFF")
+    frame_derecho.grid(row=0, column=1, sticky="nsew")
+    
+    # Agregar botones al frame izquierdo
+    
+
+    boton_citas_registradas = ttk.Button(frame_izquierdo, text="Citas registradas", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_citas_registradas.pack(pady=20)
+    
+    boton_horarios = ttk.Button(frame_izquierdo, text="Horarios", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_horarios.pack(pady=20)
+
+    boton_registro_medico = ttk.Button(frame_izquierdo, text="Registro médico", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_registro_medico.pack(pady=20)
+
+    boton_estadisticas = ttk.Button(frame_izquierdo, text="Estadísticas", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_estadisticas.pack(pady=20)
+
+    boton_historial_citas = ttk.Button(frame_izquierdo, text="Historial de citas", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_historial_citas.pack(pady=20)
+    
+    boton_regresar = ttk.Button(frame_izquierdo, text="Regresar", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
+    boton_regresar.pack(pady=50)
+    
+    boton_volver = ttk.Button(frame_izquierdo, text="Volver al Menú", style="estilo_principal.TButton", width=20, command=menuPrincipal)
+    boton_volver.pack(pady=20)
+
+    # Agregar contenido al frame derecho (por ejemplo, una lista)
+    etiqueta = tk.Label(frame_derecho, text="ElDiablo", font=("Arial", 24, "bold"), bg="#FFFFFF")
+    etiqueta.pack(pady=30)
+
+    
+    
+
+#Inferfaz del paciente----------------------------------------------------------------------------------------
+def interfazPaciente(nombre):
+    funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
+    
+    titulo_formulario = tk.Label(ventana, text=f"Bienvenido, {nombre}", font=("Arial", 24, "bold"))
     titulo_formulario.pack(pady=50)
 
     # Para ingresar el nombre
@@ -163,16 +286,16 @@ def interfazPaciente():
     frame_botones.pack(pady=20, anchor="center")
     
     # Para Guardar los datos y pasar a la lista de medicos
-    boton_guarda_continuar = tk.Button(frame_botones, text="Guarda y continuar", font=("Arial", 16), width=20, command=guarda_continuar)
+    boton_guarda_continuar = ttk.Button(frame_botones, text="Guarda y continuar", style="estilo_principal.TButton", width=20, command=guarda_continuar)
     boton_guarda_continuar.pack(side="left", padx=20)
 
     # Botón para volver al menú principal
-    boton_regresar = tk.Button(frame_botones, text="Regresar", font=("Arial", 16), width=20, command=menuPrincipal)
+    boton_regresar = ttk.Button(frame_botones, text="Regresar", style="estilo_principal.TButton", width=20, command=menuPrincipal)
     boton_regresar.pack(side="left", padx=20)
 
+#Interfaz de doctores-----------------------------------------------------------------------------------------------------
 def interfaz_lista_medicos():
-    for widget in ventana.winfo_children():
-        widget.destroy()
+    funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
     titulo_formulario = tk.Label(ventana, text="Lista de médicos", font=("Arial", 20, "bold"))
     titulo_formulario.pack(pady=20)
     busqueda = tk.Label(ventana, text="Busqueda de medicos", font=("Arial", 20, "bold"))
@@ -206,33 +329,35 @@ def interfaz_lista_medicos():
     
     #lista De medicos
     medicos = [
-        {"nombre": "Dra. Meredith Grey", "especialidad": "Cirugía general", "precio": "3000", "foto": "meredith_grey.png"},
-        {"nombre": "Dr. Derek Shepherd", "especialidad": "Neurocirugía", "precio": "5000", "foto": "derek_shepard.png"},
-        {"nombre": "Dr. Gregory House", "especialidad": "Diagnostico", "precio": "6000", "foto": "gregory_house.png"},
-        {"nombre": "Dra. Cristina Yang", "especialidad": "Cirugía cardiotorácica", "precio": "4000", "foto": "cristina_yang.png"},
-        {"nombre": "Dr. Shaun Murphy", "especialidad": "Cirugía general", "precio": "2000", "foto": "shaun_murphy.png"},
-        {"nombre": "Dra. Addison Montgomery", "especialidad": "Obstetricia / Neonatal", "precio": "4000", "foto": "addison_montgomery.png"},
-        {"nombre": "Dr. Richard Webber", "especialidad": "Cirugía general", "precio": "3500", "foto": "richard_webber.png"},
-        {"nombre": "Dr. Jackson Avery", "especialidad": "Cirugía plastica / Otorrino", "precio": "3500", "foto": "jackson_every.png"},
-        {"nombre": "Dra. Miranda Bailey", "especialidad": "Cirugía general", "precio": "2500", "foto": "miranda_bailey.png"},
-        {"nombre": "Dr. Alex Karev", "especialidad": "Cirugía pediátrica", "precio": "2500", "foto": "alex_karev.png"},
-        {"nombre": "Dr. James Wilson", "especialidad": "Oncología", "precio": "2500", "foto": "james_wilson.png"},
-        {"nombre": "Dra. Jo Wilson", "especialidad": "Cirugía general", "precio": "1200", "foto": "jo_wilson.png"},
+        {"nombre": "Dra. Meredith Grey", "especialidad": "Cirugía general", "precio": "3000", "foto": "imagenes/meredith_grey.png"},
+        {"nombre": "Dr. Derek Shepherd", "especialidad": "Neurocirugía", "precio": "5000", "foto": "imagenes/derek_shepard.png"},
+        {"nombre": "Dr. Gregory House", "especialidad": "Diagnostico", "precio": "6000", "foto": "imagenes/gregory_house.png"},
+        {"nombre": "Dra. Cristina Yang", "especialidad": "Cirugía cardiotorácica", "precio": "4000", "foto": "imagenes/cristina_yang.png"},
+        {"nombre": "Dr. Shaun Murphy", "especialidad": "Cirugía general", "precio": "2000", "foto": "imagenes/shaun_murphy.png"},
+        {"nombre": "Dra. Addison Montgomery", "especialidad": "Obstetricia / Neonatal", "precio": "4000", "foto": "imagenes/addison_montgomery.png"},
+        {"nombre": "Dr. Richard Webber", "especialidad": "Cirugía general", "precio": "3500", "foto": "imagenes/richard_webber.png"},
+        {"nombre": "Dr. Jackson Avery", "especialidad": "Cirugía plastica / Otorrino", "precio": "3500", "foto": "imagenes/jackson_every.png"},
+        {"nombre": "Dra. Miranda Bailey", "especialidad": "Cirugía general", "precio": "2500", "foto": "imagenes/miranda_bailey.png"},
+        {"nombre": "Dr. Alex Karev", "especialidad": "Cirugía pediátrica", "precio": "2500", "foto": "imagenes/alex_karev.png"},
+        {"nombre": "Dr. James Wilson", "especialidad": "Oncología", "precio": "2500", "foto": "imagenes/james_wilson.png"},
+        {"nombre": "Dra. Jo Wilson", "especialidad": "Cirugía general", "precio": "1200", "foto": "imagenes/jo_wilson.png"},
     ]
     
     # Asociar la lista a la ventana principal
     ventana.imagenes_cargadas = []
     
     #botones para ordenar lalista
-    tk.Button(frame_contenedor, text="Ordenar por nombre", font=("Arial", 16), width=20).grid(row=0, column=1, padx=5, pady=5)
-    tk.Button(frame_contenedor, text="Ordenar por especialidad", font=("Arial", 16), width=20).grid(row=0, column=2, padx=5, pady=5)
-    tk.Button(frame_contenedor, text="Ordenar por precio", font=("Arial", 16), width=20).grid(row=0, column=3, padx=5, pady=5)
+    ttk.Button(frame_contenedor, text="Ordenar por nombre", style="estilo_principal.TButton", width=20).grid(row=0, column=1, padx=5, pady=5)
+    ttk.Button(frame_contenedor, text="Ordenar por especialidad", style="estilo_principal.TButton", width=20).grid(row=0, column=2, padx=5, pady=5)
+    ttk.Button(frame_contenedor, text="Ordenar por precio", style="estilo_principal.TButton", width=20).grid(row=0, column=3, padx=5, pady=5)
     # Encabezados dentro del frame_contenedor para que coincidan con los datos
     tk.Label(frame_contenedor, text="Foto", font=("Arial", 14, "bold"), width=12).grid(row=1, column=0, padx=5, pady=5)
     tk.Label(frame_contenedor, text="Nombre", font=("Arial", 14, "bold"), width=20).grid(row=1, column=1, padx=5, pady=5)
     tk.Label(frame_contenedor, text="Especialidad", font=("Arial", 14, "bold"), width=20).grid(row=1, column=2, padx=5, pady=5)
     tk.Label(frame_contenedor, text="Precio (MXN)", font=("Arial", 14, "bold"), width=10).grid(row=1, column=3, padx=5, pady=5)
     tk.Label(frame_contenedor, text="Acción", font=("Arial", 14, "bold"), width=12).grid(row=1, column=4, padx=5, pady=5)
+    boton_salir = ttk.Button(ventana, text="Salir", style="boton_salir.TButton", command=ventana.destroy)
+    boton_salir.place(x=1050, y=30)
 
     #mostrar lista de medicos
     for i, medico in enumerate(medicos, start = 2):
@@ -250,13 +375,8 @@ def interfaz_lista_medicos():
         tk.Label(frame_contenedor, text=medico["precio"], font=("Arial", 12), width=10, anchor="w").grid(row=i, column=3)
         tk.Button(frame_contenedor, text="Seleccionar", command=lambda m=medico: agendar_cita(m)).grid(row=i, column=4, padx=10)
 
-# ventana principal
-ventana = tk.Tk()
-ventana.title("Sistema de Inicio de Sesión")
-ventana.geometry("1200x720") 
 
-# Mostrar al iniciar (Menu pricipal)
+# Mostrar al iniciar (Menu pricipal)-------------------------------------------------------------------------------
 menuPrincipal()
-
 # Ejecutar ventana
 ventana.mainloop()
