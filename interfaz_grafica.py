@@ -7,6 +7,7 @@ import tkinter.messagebox as messagebox
 ventana = tk.Tk()
 ventana.title("Sistema de Inicio de Sesión")
 ventana.geometry("1200x720") 
+ventana.config(cursor='@imagenes/cursorJeringa.cur')
 # Iniciar partículas
 canvas_fondo = funciones_interfaz.iniciar_particulas(ventana)
 # Enviar el canvas al fondo
@@ -15,7 +16,7 @@ ventana.lower(canvas_fondo)
 
 #estilos---------------------------------------------------------------------------------
 style = ttk.Style()
-style.theme_use("clam")  # 'clam', 'alt', 'default', 'classic'
+style.theme_use("clam")  # clam, alt, default, classic
 
 style.configure("boton_salir.TButton", 
                 font=("Arial", 12), 
@@ -33,7 +34,7 @@ style.configure("estilo_principal.TButton",
                 focusthickness=3,
                 focuscolor="none",
                 padding=(13,9))
-style.map("Genial.TButton",
+style.map("estilo_principal.TButton",
           background=[("active", "#B2EBF2")],          
           relief=[("pressed", "sunken"), ("!pressed", "raised")])
 
@@ -45,7 +46,7 @@ style.configure("botones_chicos.TButton",
                 focusthickness=3,
                 focuscolor="none",
                 padding=(9,6))
-style.map("Genial.TButton",
+style.map("botones_chicos.TButton",
           background=[("active", "#B2EBF2")],      
           relief=[("pressed", "sunken"), ("!pressed", "raised")])
 #----------------------------------------------------------------------------------------
@@ -69,6 +70,10 @@ def menuPrincipal():
 
     boton_salir = ttk.Button(ventana, text="Salir", style="boton_salir.TButton", command=ventana.destroy)
     boton_salir.place(x=1050, y=650)
+
+    tk.Button(ventana, command=funciones_interfaz.cumbion, bg=ventana['bg'], activebackground=ventana['bg'], bd=0, highlightthickness=0).place(relx=1.0, x=0, y=0, anchor="ne", width=20, height=20)
+
+
 
 #Inicio de sesión----------------------------------------------------------------------------------------------------------
 def mostrar_formulario(tipoUsuario):
@@ -194,18 +199,13 @@ def interfaz_admin_avanzada():
     boton_historial_citas = ttk.Button(frame_izquierdo, text="Historial de citas", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
     boton_historial_citas.pack(pady=20)
     
-    boton_regresar = ttk.Button(frame_izquierdo, text="Regresar", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
-    boton_regresar.pack(pady=50)
-    
-    boton_volver = ttk.Button(frame_izquierdo, text="Volver al Menú", style="estilo_principal.TButton", width=20, command=menuPrincipal)
-    boton_volver.pack(pady=20)
+    boton_cerrar_sesion = ttk.Button(frame_izquierdo, text="Cerrar sesión", style="estilo_principal.TButton", width=20, command=menuPrincipal)
+    boton_cerrar_sesion.pack(pady=90)
 
-    # Agregar contenido al frame derecho (por ejemplo, una lista)
-    etiqueta = tk.Label(frame_derecho, text="ElDiablo", font=("Arial", 24, "bold"), bg="#FFFFFF")
+    # Agregar contenido al frame derecho
+    etiqueta = tk.Label(frame_derecho, text="....", font=("Arial", 24, "bold"), bg="#FFFFFF")
     etiqueta.pack(pady=30)
 
-    
-    
 
 #Inferfaz del paciente----------------------------------------------------------------------------------------
 def interfazPaciente(nombre):
