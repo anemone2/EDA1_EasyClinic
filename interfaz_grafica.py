@@ -183,7 +183,6 @@ def interfaz_admin_avanzada():
     
     # Agregar botones al frame izquierdo
     
-
     boton_citas_registradas = ttk.Button(frame_izquierdo, text="Citas registradas", style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
     boton_citas_registradas.pack(pady=20)
     
@@ -214,12 +213,6 @@ def interfazPaciente(nombre):
     titulo_formulario = tk.Label(ventana, text=f"Bienvenido, {nombre}", font=("Arial", 24, "bold"))
     titulo_formulario.pack(pady=50)
 
-    # Para ingresar el nombre
-    lbl_nombre = tk.Label(ventana, text="Nombre:", font=("Arial", 16))
-    lbl_nombre.pack(pady=10)
-    ingresar_nombre = tk.Entry(ventana, font=("Arial", 14), width=30)
-    ingresar_nombre.pack(pady=5)
-
     # Para ingresar la edad
     lbl_edad = tk.Label(ventana, text="Edad:", font=("Arial", 16))
     lbl_edad.pack(pady=10)
@@ -247,16 +240,12 @@ def interfazPaciente(nombre):
     # Para guardar los datos del paciente y luego pasar a la lista de médicos
     def guarda_continuar():
         #guarda los datos en las variables
-        nombre = ingresar_nombre.get()
         edad = ingresar_edad.get()
         sexo = ingresar_sexo.get()
         peso = ingresar_peso.get()
         motivo = ingresar_motivo.get()
         
         # Validaciones básicas de cada dato
-        if not nombre.strip():
-            messagebox.showerror("Error", "El nombre no puede estar vacío.")
-            return
         if not edad.isdigit() or int(edad) <= 0:
             messagebox.showerror("Error", "La edad debe ser un número positivo.")
             return
