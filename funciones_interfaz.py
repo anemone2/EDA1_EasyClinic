@@ -1,21 +1,25 @@
 import tkinter as tk
 import random
-import sys
-import time
 
-def iniciar_particulas(ventana): #Funsión diseñada para recibir una ventana como parametro
-    #De esta forma es más facil integrarla al archivo principal de interfaz
-    #Asigno dimensiones a variables
+def iniciar_particulas(ventana, tono): #Funsión diseñada para recibir una ventana como parametro
+    #Asigno valores a variables
+    if tono:
+        color_fondo = "#121212"
+        color_particula = "#B266FF"
+    else:
+        color_fondo = "white"
+        color_particula = "#B2EBF2"
+
     ancho = ventana.winfo_width() if ventana.winfo_width() > 1 else 1200
     alto = ventana.winfo_height() if ventana.winfo_height() > 1 else 720
-    canvas = tk.Canvas(ventana, width=ancho, height=alto, highlightthickness=0) #Se crea un canvas y se elimina su margen por defecto
+    canvas = tk.Canvas(ventana, width=ancho, height=alto, highlightthickness=0, bg=color_fondo) #Se crea un canvas y se elimina su margen por defecto
     canvas.place(x=0, y=0) #Se posiciona en (0,0)
     particulas = []
     for _ in range(100): #Genera 100 particulas, "_" se usa cuando no se usará ese valor
         x = random.randint(0, ancho) #Genera coordenadas aleatorias
         y = random.randint(0, alto) #Genera coordenadas aleatorias
         size = random.randint(3, 12) #variable de tamaño, uso size por evitar caracteres especiales
-        particula_id = canvas.create_oval(x, y, x+size, y+size, fill="#B2EBF2", outline="") #Caracteristicas del ovalo creado
+        particula_id = canvas.create_oval(x, y, x+size, y+size, fill=color_particula, outline="") #Caracteristicas del ovalo creado
         vx = random.uniform(-2, 2) #variable de velocidad
         vy = random.uniform(-2, 2) #variable de veYlocidad
         particulas.append({"id": particula_id, "vx": vx, "vy": vy}) #Guarda un diccionario de la particla en la lista "particulas"
@@ -53,40 +57,3 @@ def limpiar_contenido(ventana, canvas_fondo):
         if widget != canvas_fondo:
             widget.destroy()
 
-def cumbion():
-    # Colores ANSI
-    colores = [
-        '\033[91m',  # rojo
-        '\033[92m',  # verde
-        '\033[93m',  # amarillo
-        '\033[94m',  # azul
-        '\033[95m',  # magenta
-        '\033[96m',  # cian
-        '\033[97m',  # blanco
-    ]
-
-    resetear = '\033[0m'
-
-    # Símbolos musicales
-    simbolos_musicales = ['🎵', '🎶', '♫', '♪']
-
-    # Letra de la cumbia
-    letra = [
-        "Vamos a bailaaar, vamos a bailar la cumbiaaaaaa",
-        "Vamos a bailaaar, vamos a bailar la cumbiaaaaaa",
-        "Vamos a bailaaar, vamos a bailar la cumbiaaaaaa",
-        "Vamos a bailaaar, vamos a bailar la cumbiaaaaaa"
-    ]
-
-    for linea in letra:
-        color = random.choice(colores)
-        simbolo= random.choice(simbolos_musicales)
-        print(color, end="")
-
-        for char in linea:
-            print(char, end="")
-            sys.stdout.flush()
-            time.sleep(0.2127) #tiempo en que se muestra cada caracter, si en verso tarda 10.42[s]
-            #tengo 49 caracteres con espacios, regla de 3, velocidad = 10.42 / 49 = 0.2127
-
-        print(f" {simbolo}{resetear}")
