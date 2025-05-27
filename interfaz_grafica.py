@@ -14,36 +14,50 @@ ventana.geometry("1200x720")
 ventana.config(cursor='@imagenes/cursorJeringa.cur')
 # Iniciar partículas
 condicion_modo_oscuro = True
-canvas_fondo = funciones_interfaz.iniciar_particulas(ventana, condicion_modo_oscuro)
+color_fondo_actual = "white"
+color_letra = "black"
+color_boton_ttk = "#E0F7FA"
+#color_boton_activo_ttk = "#B2EBF2"
+color_particula = "#B2EBF2"
+color_auxiliar = "#CAF4F9"
+color_entrada = "#EFFCFE"
+
+canvas_fondo = None
+
+#canvas_fondo = funciones_interfaz.iniciar_particulas(ventana, color_fondo_actual, color_particula)
 # Enviar el canvas al fondo
-ventana.lower(canvas_fondo)
+#ventana.lower(canvas_fondo)
 
 
 def alternar_modo_oscuro():
-    global condicion_modo_oscuro, canvas_fondo
-    # Cambiar el estado de la variable
-    condicion_modo_oscuro = not condicion_modo_oscuro
-    # Eliminar el canvas anterior
-    canvas_fondo.destroy()
-    # Reiniciar las partículas con el nuevo modo
-    canvas_fondo = funciones_interfaz.iniciar_particulas(ventana, condicion_modo_oscuro)
-    ventana.lower(canvas_fondo)
+    global condicion_modo_oscuro, canvas_fondo, color_fondo_actual, color_letra, color_auxiliar, color_entrada
 
-    # Cambiar el fondo de la ventana
+    condicion_modo_oscuro = not condicion_modo_oscuro
+
+    if canvas_fondo is not None:
+        canvas_fondo.destroy()
+
     if condicion_modo_oscuro:
-        color_fondo = "black"
+        color_fondo_actual = "#121212"
         color_letra = "white"
         color_boton = "#333333"
         color_boton_activo = "#444444"
+        color_particula = "#B266FF"
+        color_auxiliar = "#545454"
+        color_entrada = "#B0B0B0"
     else:
-        color_fondo = "#121212"
+        color_fondo_actual = "white"
         color_letra = "black"
         color_boton = "#E0F7FA"
         color_boton_activo = "#B2EBF2"
+        color_particula = "#B2EBF2"
+        color_auxiliar = "#CAF4F9"
+        color_entrada = "#EFFCFE"
 
-    ventana.config(bg=color_fondo)
+    canvas_fondo = funciones_interfaz.iniciar_particulas(ventana, color_fondo_actual, color_particula)
+    ventana.lower(canvas_fondo)
+    ventana.config(bg=color_fondo_actual)
 
-    #Actualizar los estilos
     style = ttk.Style()
     style.theme_use("clam")
 
@@ -87,7 +101,8 @@ def menuPrincipal():
     funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
     
     # Título
-    titulo = tk.Label(ventana, text=textos["bienvenida"], font=("Arial", 24, "bold"))
+    titulo = tk.Label(ventana, text=textos["bienvenida"], font=("Arial", 24, "bold"),
+                  bg=color_fondo_actual, fg=color_letra)
     titulo.pack(pady=70)
     
     # Botón de inicio de sesión como paciente
@@ -178,27 +193,31 @@ def mostrar_formulario(tipoUsuario):
     funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
 
     # Título del formulario
-    titulo_formulario = tk.Label(ventana, text=f"{textos["iniciar_sesion_como"]} {tipoUsuario}", font=("Arial", 24, "bold"))
+    titulo_formulario = tk.Label(ventana, text=f"{textos["iniciar_sesion_como"]} {tipoUsuario}", font=("Arial", 24, "bold"),
+                                 bg=color_fondo_actual, fg=color_letra)
     titulo_formulario.pack(pady=50)
     
     # Para ingresar el nombre
-    lbl_nombre = tk.Label(ventana, text=textos["nombre"], font=("Arial", 16))
+    lbl_nombre = tk.Label(ventana, text=textos["nombre"], font=("Arial", 16),
+                          bg=color_fondo_actual, fg=color_letra)
     lbl_nombre.pack(pady=10)
-    ingresar_nombre = tk.Entry(ventana, font=("Arial", 14), width=30)
+    ingresar_nombre = tk.Entry(ventana, font=("Arial", 14), width=30, bg= color_entrada)
     ingresar_nombre.pack(pady=5)
     
     # Para ingresar el correo electrónicp
-    lbl_correo = tk.Label(ventana, text=textos["correo_electronico"], font=("Arial", 16))
+    lbl_correo = tk.Label(ventana, text=textos["correo_electronico"], font=("Arial", 16),
+                          bg=color_fondo_actual, fg=color_letra)
     lbl_correo.pack(pady=10)
-    ingresar_correo = tk.Entry(ventana, font=("Arial", 14), width=30)
+    ingresar_correo = tk.Entry(ventana, font=("Arial", 14), width=30, bg=color_entrada)
     ingresar_correo.pack(pady=5)
     
     ingresar_contrasena = None
     # Si es administrador, agregar espacio para la contraseña
     if tipoUsuario == "Administrador":
-        lbl_contrasena = tk.Label(ventana, text=textos["contrasena"], font=("Arial", 16))
+        lbl_contrasena = tk.Label(ventana, text=textos["contrasena"], font=("Arial", 16),
+                                  bg=color_fondo_actual, fg=color_letra)
         lbl_contrasena.pack(pady=10)
-        ingresar_contrasena = tk.Entry(ventana, font=("Arial", 14), width=30, show="*")
+        ingresar_contrasena = tk.Entry(ventana, font=("Arial", 14), width=30, show="*", bg=color_entrada)
         ingresar_contrasena.pack(pady=5)
     
     def enviar_datos():
@@ -207,7 +226,7 @@ def mostrar_formulario(tipoUsuario):
         contrasena = ingresar_contrasena.get() if ingresar_contrasena else None
         exito, mensaje = funciones_interfaz.inicioDeSesion(tipoUsuario, nombre, correo, contrasena)
         
-        print(f"Validación: {exito}, Mensaje: {mensaje}") #guiarse en la terminal
+        print(f"Validación: {exito}, Mensaje: {mensaje}") #guiarme en la terminal
 
         if exito:
             if tipoUsuario == "Paciente":
@@ -234,7 +253,8 @@ def interfazAdmin(nombre):
     funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
     
     # Título centrado que ocupa dos columnas
-    titulo = tk.Label(ventana, text=f"{textos["bienvenido"]} {nombre}", font=("Arial", 24, "bold"))
+    titulo = tk.Label(ventana, text=f"{textos["bienvenido"]} {nombre}", font=("Arial", 24, "bold"),
+                      bg=color_fondo_actual, fg=color_letra)
     titulo.pack(pady=50)
     
     boton_citas_registradas = ttk.Button(ventana, text=textos["citas_registradas"], style="estilo_principal.TButton", width=20, command=interfaz_admin_avanzada)
@@ -271,11 +291,11 @@ def interfaz_admin_avanzada():
     ventana.rowconfigure(0, weight=1)
     
     # Crear el frame izquierdo para los botones (1/4 del ancho)
-    frame_izquierdo = tk.Frame(ventana, bg="#E0E0E0")
+    frame_izquierdo = tk.Frame(ventana, bg=color_fondo_actual)
     frame_izquierdo.grid(row=0, column=0, sticky="nsew")
     
     # Crear el frame derecho para el contenido (3/4 del ancho)
-    frame_derecho = tk.Frame(ventana, bg="#FFFFFF")
+    frame_derecho = tk.Frame(ventana, bg=color_auxiliar)
     frame_derecho.grid(row=0, column=1, sticky="nsew")
     
     # Agregar botones al frame izquierdo
@@ -299,7 +319,8 @@ def interfaz_admin_avanzada():
     boton_cerrar_sesion.pack(pady=90)
 
     # Agregar contenido al frame derecho
-    etiqueta = tk.Label(frame_derecho, text="....", font=("Arial", 24, "bold"), bg="#FFFFFF")
+    etiqueta = tk.Label(frame_derecho, text="....", font=("Arial", 24, "bold"),
+                        bg=color_fondo_actual, fg=color_letra)
     etiqueta.pack(pady=30)
 
 
@@ -307,31 +328,36 @@ def interfaz_admin_avanzada():
 def interfazPaciente(nombre):
     funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
     
-    titulo_formulario = tk.Label(ventana, text=f"{textos["bienvenido"]} {nombre}", font=("Arial", 24, "bold"))
+    titulo_formulario = tk.Label(ventana, text=f"{textos["bienvenido"]} {nombre}", font=("Arial", 24, "bold"),
+                                 bg=color_fondo_actual, fg=color_letra)
     titulo_formulario.pack(pady=50)
 
     # Para ingresar la edad
-    lbl_edad = tk.Label(ventana, text=textos["edad"], font=("Arial", 16))
+    lbl_edad = tk.Label(ventana, text=textos["edad"], font=("Arial", 16),
+                        bg=color_fondo_actual, fg=color_letra)
     lbl_edad.pack(pady=10)
-    ingresar_edad = tk.Entry(ventana, font=("Arial", 14), width=30)
+    ingresar_edad = tk.Entry(ventana, font=("Arial", 14), width=30, bg=color_entrada)
     ingresar_edad.pack(pady=5)
     
     # Para ingresar el Sexo
-    lbl_sexo = tk.Label(ventana, text=textos["sexo"], font=("Arial", 16))
+    lbl_sexo = tk.Label(ventana, text=textos["sexo"], font=("Arial", 16),
+                        bg=color_fondo_actual, fg=color_letra)
     lbl_sexo.pack(pady=10)
-    ingresar_sexo = tk.Entry(ventana, font=("Arial", 14), width=30)
+    ingresar_sexo = tk.Entry(ventana, font=("Arial", 14), width=30, bg=color_entrada)
     ingresar_sexo.pack(pady=5)
     
     # Para ingresar el peso
-    lbl_peso = tk.Label(ventana, text=textos["peso"], font=("Arial", 16))
+    lbl_peso = tk.Label(ventana, text=textos["peso"], font=("Arial", 16),
+                        bg=color_fondo_actual, fg=color_letra)
     lbl_peso.pack(pady=10)
-    ingresar_peso = tk.Entry(ventana, font=("Arial", 14), width=30)
+    ingresar_peso = tk.Entry(ventana, font=("Arial", 14), width=30, bg=color_entrada)
     ingresar_peso.pack(pady=5)
     
     # Para ingresar el motivo de la cita
-    lbl_motivo = tk.Label(ventana, text=textos["motivo"], font=("Arial", 16))
+    lbl_motivo = tk.Label(ventana, text=textos["motivo"], font=("Arial", 16),
+                          bg=color_fondo_actual, fg=color_letra)
     lbl_motivo.pack(pady=10)
-    ingresar_motivo = tk.Entry(ventana, font=("Arial", 14), width=30)
+    ingresar_motivo = tk.Entry(ventana, font=("Arial", 14), width=30, bg=color_entrada)
     ingresar_motivo.pack(pady=5)
     
     # Para guardar los datos del paciente y luego pasar a la lista de médicos
@@ -368,7 +394,7 @@ def interfazPaciente(nombre):
         interfaz_lista_medicos()
     
     #Para crear un frame y que los botones aparezcan uno alado del otro
-    frame_botones = tk.Frame(ventana)
+    frame_botones = tk.Frame(ventana, bg=color_fondo_actual)
     frame_botones.pack(pady=20, anchor="center")
     
     # Para Guardar los datos y pasar a la lista de medicos
@@ -382,11 +408,13 @@ def interfazPaciente(nombre):
 #Interfaz de doctores-----------------------------------------------------------------------------------------------------
 def interfaz_lista_medicos():
     funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
-    titulo_formulario = tk.Label(ventana, text=textos["lista_medicos"], font=("Arial", 20, "bold"))
+    titulo_formulario = tk.Label(ventana, text=textos["lista_medicos"], font=("Arial", 20, "bold"),
+                                 bg=color_fondo_actual, fg=color_letra)
     titulo_formulario.pack(pady=20)
-    busqueda = tk.Label(ventana, text=textos["busqueda_medicos"], font=("Arial", 20, "bold"))
+    busqueda = tk.Label(ventana, text=textos["busqueda_medicos"], font=("Arial", 20, "bold"),
+                        bg=color_fondo_actual, fg=color_letra)
     busqueda.pack(pady=10)
-    buscar_medico = tk.Entry(ventana, font=("Arial", 14), width=30)
+    buscar_medico = tk.Entry(ventana, font=("Arial", 14), width=30, bg = color_entrada)
     buscar_medico.pack(pady=10)
 
     
