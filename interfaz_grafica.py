@@ -3,6 +3,8 @@ import funciones_interfaz
 from tkinter import ttk
 import tkinter.messagebox as messagebox
 from PIL import Image, ImageTk
+import calendar
+from datetime import datetime
 import idioma_esp as lenguaje # Importa español como predeterminado
 
 textos = lenguaje.textos
@@ -443,18 +445,42 @@ def interfaz_lista_medicos():
     
     #lista De medicos
     medicos = [
-        {"nombre": "Dra. Meredith Grey", "especialidad": "Cirugía general", "precio": "3000", "foto": "imagenes/meredith_grey.png"},
-        {"nombre": "Dr. Derek Shepherd", "especialidad": "Neurocirugía", "precio": "5000", "foto": "imagenes/derek_shepard.png"},
-        {"nombre": "Dr. Gregory House", "especialidad": "Diagnostico", "precio": "6000", "foto": "imagenes/gregory_house.png"},
-        {"nombre": "Dra. Cristina Yang", "especialidad": "Cirugía cardiotorácica", "precio": "4000", "foto": "imagenes/cristina_yang.png"},
-        {"nombre": "Dr. Shaun Murphy", "especialidad": "Cirugía general", "precio": "2000", "foto": "imagenes/shaun_murphy.png"},
-        {"nombre": "Dra. Addison Montgomery", "especialidad": "Obstetricia / Neonatal", "precio": "4000", "foto": "imagenes/addison_montgomery.png"},
-        {"nombre": "Dr. Richard Webber", "especialidad": "Cirugía general", "precio": "3500", "foto": "imagenes/richard_webber.png"},
-        {"nombre": "Dr. Jackson Avery", "especialidad": "Cirugía plastica / Otorrino", "precio": "3500", "foto": "imagenes/jackson_every.png"},
-        {"nombre": "Dra. Miranda Bailey", "especialidad": "Cirugía general", "precio": "2500", "foto": "imagenes/miranda_bailey.png"},
-        {"nombre": "Dr. Alex Karev", "especialidad": "Cirugía pediátrica", "precio": "2500", "foto": "imagenes/alex_karev.png"},
-        {"nombre": "Dr. James Wilson", "especialidad": "Oncología", "precio": "2500", "foto": "imagenes/james_wilson.png"},
-        {"nombre": "Dra. Jo Wilson", "especialidad": "Cirugía general", "precio": "1200", "foto": "imagenes/jo_wilson.png"},
+        {"nombre": "Dra. Meredith Grey", "especialidad": "Cirugía general", "precio": "3000", "foto": "imagenes/meredith_grey.png", "horarios": {
+        "Lunes": ["09:00", "13:00", "17:00"], "Martes": ["09:00", "13:00", "17:00"], "Miércoles": [], "Jueves": ["09:00", "13:00", "17:00"],
+        "Viernes": ["13:00", "17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dr. Derek Shepherd", "especialidad": "Neurocirugía", "precio": "5000", "foto": "imagenes/derek_shepard.png", "horarios": {
+        "Lunes": ["17:00"], "Martes": ["17:00"], "Miércoles": [], "Jueves": ["17:00"],
+        "Viernes": ["17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dr. Gregory House", "especialidad": "Diagnostico", "precio": "6000", "foto": "imagenes/gregory_house.png", "horarios": {
+        "Lunes": ["17:00"], "Martes": [], "Miércoles": ["17:00"], "Jueves": [],
+        "Viernes": ["17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dra. Cristina Yang", "especialidad": "Cirugía cardiotorácica", "precio": "4000", "foto": "imagenes/cristina_yang.png", "horarios": {
+        "Lunes": ["17:00"], "Martes": ["17:00"], "Miércoles": [], "Jueves": ["17:00"],
+        "Viernes": ["17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dr. Shaun Murphy", "especialidad": "Cirugía general", "precio": "2000", "foto": "imagenes/shaun_murphy.png", "horarios": {
+        "Lunes": ["09:00", "13:00", "17:00"], "Martes": ["09:00", "13:00", "17:00"], "Miércoles": [], "Jueves": ["09:00", "13:00", "17:00"],
+        "Viernes": ["13:00", "17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dra. Addison Montgomery", "especialidad": "Obstetricia / Neonatal", "precio": "4000", "foto": "imagenes/addison_montgomery.png", "horarios": {
+        "Lunes": ["17:00"], "Martes": ["17:00"], "Miércoles": [], "Jueves": ["17:00"],
+        "Viernes": ["17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dr. Richard Webber", "especialidad": "Cirugía general", "precio": "3500", "foto": "imagenes/richard_webber.png", "horarios": {
+        "Lunes": ["09:00", "13:00", "17:00"], "Martes": ["09:00", "13:00", "17:00"], "Miércoles": [], "Jueves": ["09:00", "13:00", "17:00"],
+        "Viernes": ["13:00", "17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dr. Jackson Avery", "especialidad": "Cirugía plastica / Otorrino", "precio": "3500", "foto": "imagenes/jackson_every.png", "horarios": {
+        "Lunes": ["17:00"], "Martes": ["17:00"], "Miércoles": [], "Jueves": ["17:00"],
+        "Viernes": ["17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dra. Miranda Bailey", "especialidad": "Cirugía general", "precio": "2500", "foto": "imagenes/miranda_bailey.png", "horarios": {
+        "Lunes": ["09:00", "13:00", "17:00"], "Martes": ["09:00", "13:00", "17:00"], "Miércoles": [], "Jueves": ["09:00", "13:00", "17:00"],
+        "Viernes": ["13:00", "17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dr. Alex Karev", "especialidad": "Cirugía pediátrica", "precio": "2500", "foto": "imagenes/alex_karev.png", "horarios": {
+        "Lunes": ["17:00"], "Martes": ["17:00"], "Miércoles": [], "Jueves": ["17:00"],
+        "Viernes": ["17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dr. James Wilson", "especialidad": "Oncología", "precio": "2500", "foto": "imagenes/james_wilson.png", "horarios": {
+        "Lunes": ["17:00"], "Martes": ["17:00"], "Miércoles": [], "Jueves": ["17:00"],
+        "Viernes": ["17:00"], "Sábado": [], "Domingo": []}},
+        {"nombre": "Dra. Jo Wilson", "especialidad": "Cirugía general", "precio": "1200", "foto": "imagenes/jo_wilson.png", "horarios": {
+        "Lunes": ["09:00", "13:00", "17:00"], "Martes": ["09:00", "13:00", "17:00"], "Miércoles": [], "Jueves": ["09:00", "13:00", "17:00"],
+        "Viernes": ["13:00", "17:00"], "Sábado": [], "Domingo": []}},
     ]
     
     # Asociar la lista a la ventana principal
@@ -489,7 +515,63 @@ def interfaz_lista_medicos():
         tk.Label(frame_contenedor, text=medico["precio"], font=("Arial", 12), width=10, anchor="w").grid(row=i, column=3)
         tk.Button(frame_contenedor, text=textos["seleccionar"], command=lambda m=medico: agendar_cita(m)).grid(row=i, column=4, padx=10)
 
+#interfaz para agendar citas---------------------------------------------------------------------------------------
+def agendar_cita(m):
+    funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
+    calendario = tk.Label(ventana, text=textos["calendario"], font=("Arial", 20, "bold"), bg=color_fondo_actual, fg=color_letra)
+    calendario.pack(pady=20)
+    
+    # Frame exclusivo para el calendario
+    frame_calendario = tk.Frame(ventana, bg=color_fondo_actual)
+    frame_calendario.pack(pady=20)
+    
+    # Obtener el año y mes actuales
+    fecha_actual = datetime.now()
+    año_actual = fecha_actual.year
+    mes_actual = fecha_actual.month
 
+    # Días de la semana
+    dias_semana = [textos["lunes"], textos["martes"], textos["miercoles"], textos["jueves"], textos["viernes"], textos["sabado"], textos["domingo"]]
+    for columna, nombre_dia in enumerate(dias_semana):
+        dia = tk.Label(frame_calendario, text=nombre_dia,
+                                font=("Arial", 12, "bold"),
+                                bg=color_fondo_actual, fg=color_letra)
+        dia.grid(row=0, column=columna, padx=10, pady=10)
+
+    # Matriz del mes actual (lista de semanas)
+    calendario_mes = calendar.monthcalendar(año_actual, mes_actual)
+
+    # Crear botón por cada día del mes
+    for fila, semana in enumerate(calendario_mes, start=1):
+        for columna, dia in enumerate(semana):
+            if dia != 0:
+                boton_dia = ttk.Button(frame_calendario, text=str(dia), style="botones_chicos.TButton", width=5, command=lambda d=columna: horario(d, m))
+                boton_dia.grid(row=fila, column=columna, padx=5, pady=5)
+    # Botón para volver a la lista de médicos
+    boton_regresar = ttk.Button(ventana, text=textos["regresar"], style="estilo_principal.TButton", width=20, command=interfaz_lista_medicos)
+    boton_regresar.pack(side="left", padx=20)
+    def horario(d, m):
+        funciones_interfaz.limpiar_contenido(ventana, canvas_fondo)
+        horas_label = tk.Label(ventana, text=textos["horario"], font=("Arial", 20, "bold"), bg=color_fondo_actual, fg=color_letra)
+        horas_label.pack(pady=20)
+
+        #Traduce el índice dado en la función a el nombre de la semana que corresponde a la clave del diccionario
+        dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+        dia_nombre = dias_semana[d]
+
+        #Obtiene lista de horas para ese día
+        lista_horas = m["horarios"].get(dia_nombre, [])
+
+        #Si la lista esta vacia y no hay horas se lanza ese mansaje
+        if not lista_horas:
+            sin_horas = tk.Label(ventana, text="No hay horarios disponibles para este día.", font=("Arial", 14), bg=color_fondo_actual, fg=color_letra)
+            sin_horas.pack(pady=10)
+        else:
+            for hora in lista_horas:
+                boton_hora = ttk.Button(ventana, text=hora, style="estilo_principal.TButton", width=20)
+                boton_hora.pack(pady=5)
+        boton_regresars = ttk.Button(ventana, text=textos["regresar"], style="estilo_principal.TButton", width=20, command=lambda: agendar_cita(m))
+        boton_regresars.pack(pady=5)
 # Mostrar al iniciar (Menu pricipal)-------------------------------------------------------------------------------
 alternar_modo_oscuro()
 # Ejecutar ventana
