@@ -1,15 +1,7 @@
 import tkinter as tk
 import random
 
-def iniciar_particulas(ventana, tono): #Funsión diseñada para recibir una ventana como parametro
-    #Asigno valores a variables
-    if tono:
-        color_fondo = "#121212"
-        color_particula = "#B266FF"
-    else:
-        color_fondo = "white"
-        color_particula = "#B2EBF2"
-
+def iniciar_particulas(ventana, color_fondo, color_particula): #Funsión diseñada para recibir una ventana como parametro
     ancho = ventana.winfo_width() if ventana.winfo_width() > 1 else 1200
     alto = ventana.winfo_height() if ventana.winfo_height() > 1 else 720
     canvas = tk.Canvas(ventana, width=ancho, height=alto, highlightthickness=0, bg=color_fondo) #Se crea un canvas y se elimina su margen por defecto
@@ -56,4 +48,3 @@ def limpiar_contenido(ventana, canvas_fondo):
     for widget in ventana.winfo_children():
         if widget != canvas_fondo:
             widget.destroy()
-
